@@ -1,13 +1,21 @@
 #!/usr/bin/env node
 
 var program = require('commander');
+var inquirer = require('inquirer');
 
 program
     .version('0.0.1')
     .usage('[options]')
     .description('Wikipedia articles on command line')
-    .option('-q, --query <search term>', 'Wikipedia article to search')
     .option('--log-filename <file>', 'Path to log queries')
     .parse(process.argv);
 
 program.logFilename = program.logFilename || 'wikipedia_cli_node.log';
+
+inquirer.prompt([{
+    type: 'input',
+    name: 'query',
+    message: 'Search'
+}]).then(function (answers) {
+    var query = answers.query;
+});

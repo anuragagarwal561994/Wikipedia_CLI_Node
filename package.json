@@ -37,6 +37,7 @@
   },
   "dependencies": {
     "commander": "^2.9.0",
+    "inquirer": "^1.1.2",
     "minimist": "~0.0.8",
     "verbalize": "~0.1.1"
   }
