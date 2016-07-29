@@ -36,6 +36,7 @@
     "test": "mocha -R test"
   },
   "dependencies": {
+    "commander": "^2.9.0",
     "minimist": "~0.0.8",
     "verbalize": "~0.1.1"
   }
