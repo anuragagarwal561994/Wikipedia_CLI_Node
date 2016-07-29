@@ -9,3 +9,5 @@ program
     .option('-q, --query <search term>', 'Wikipedia article to search')
     .option('--log-filename <file>', 'Path to log queries')
     .parse(process.argv);
+
+program.logFilename = program.logFilename || 'wikipedia_cli_node.log';
