@@ -72,12 +72,17 @@ inquirer.prompt([{
 }]).then(function (answers) {
     search(answers.query, function (err, title) {
         if (err) {
-            return err;
+            return handleError(err);
         }
         
         console.log(title);
     });
 });
+
+function handleError(err) {
+    console.log(err);
+    process.exit(1);
+}
 
 function _wiki_request(params, callback) {
     params['format'] = 'json';
