@@ -2,6 +2,9 @@
 
 var program = require('commander');
 var inquirer = require('inquirer');
+var request = require('request');
+
+API_URL = 'http://en.wikipedia.org/w/api.php';
 
 program
     .version('0.0.1')
@@ -19,3 +22,12 @@ inquirer.prompt([{
 }]).then(function (answers) {
     var query = answers.query;
 });
+
+function _wiki_request(params, callback) {
+    params['format'] = 'json';
+    if (!params.hasOwnProperty('action')) {
+        params['action'] = 'query';
+    }
+
+    request({url: API_URL, qs: params}, callback);
+}
