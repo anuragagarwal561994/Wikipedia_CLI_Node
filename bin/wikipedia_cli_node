@@ -3,6 +3,7 @@
 var program = require('commander');
 var inquirer = require('inquirer');
 var request = require('request');
+var async = require('async');
 var Progress = require('../lib/progress');
 
 API_URL = 'http://en.wikipedia.org/w/api.php';
@@ -71,18 +72,19 @@ inquirer.prompt([{
     name: 'query',
     message: 'Search'
 }]).then(function (answers) {
-    search(answers.query, function (err, title) {
-        if (err) {
-            return handleError(err);
+    async.waterfall([
+        function (callback) {
+            search(answers.query, callback);
+        },
+        function (title, callback) {
+            page(title, callback);
         }
+    ], function (err, result) {
+       if (err) {
+           return handleError(err);
+       }
 
-        page(title, function (err, page) {
-            if (err) {
-                return handleError(err);
-            }
-
-            console.log(page);
-        });
+       console.log(result);
     });
 });
 

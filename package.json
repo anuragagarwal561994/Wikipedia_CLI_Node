@@ -36,6 +36,7 @@
     "test": "mocha -R test"
   },
   "dependencies": {
+    "async": "^2.0.1",
     "commander": "^2.9.0",
     "inquirer": "^1.1.2",
     "minimist": "~0.0.8",
