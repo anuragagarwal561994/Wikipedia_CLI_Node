@@ -3,6 +3,7 @@
 var program = require('commander');
 var inquirer = require('inquirer');
 var request = require('request');
+var Progress = require('../lib/progress');
 
 API_URL = 'http://en.wikipedia.org/w/api.php';
 timeoutErrorMessages = ['HTTP request timed out.', 'Pool queue is full'];
@@ -100,5 +101,9 @@ function _wiki_request(params, callback) {
         params['action'] = 'query';
     }
 
-    request({url: API_URL, qs: params}, callback);
+    var progress = new Progress();
+    progress.start();
+    request({url: API_URL, qs: params}, callback).on('end', function () {
+        progress.finish();
+    });
 }
