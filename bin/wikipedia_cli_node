@@ -15,12 +15,48 @@ program
 
 program.logFilename = program.logFilename || 'wikipedia_cli_node.log';
 
+function search(query) {
+    var search_params = {
+        'list': 'search',
+        'srprop': '',
+        'srlimit': 10,
+        'limit': 10,
+        'srsearch': query
+    };
+
+    _wiki_request(search_params, function (error, response, body) {
+        var raw_results = JSON.parse(body);
+        if (response.status == 200 && !error) {
+            var queryResults = raw_results['query']['search'];
+            if (!queryResults.length) {
+                console.log('No results were found');
+                return;
+            }
+
+            var titles = [];
+            for (var i = 0; i < queryResults.length; i++) {
+                titles.push(queryResults[i]['title']);
+            }
+
+            inquirer.prompt([{
+                type: 'list',
+                name: 'search_term',
+                choices: titles,
+                message: "Choose from the following results"
+            }]).then(function (answers) {
+                var search_term = answers['search_term'];
+            })
+        }
+    });
+}
+
 inquirer.prompt([{
     type: 'input',
     name: 'query',
     message: 'Search'
 }]).then(function (answers) {
     var query = answers.query;
+    search(query);
 });
 
 function _wiki_request(params, callback) {
