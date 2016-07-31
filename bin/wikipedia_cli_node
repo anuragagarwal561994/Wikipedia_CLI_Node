@@ -75,10 +75,61 @@ inquirer.prompt([{
         if (err) {
             return handleError(err);
         }
-        
-        console.log(title);
+
+        page(title, function (err, page) {
+            if (err) {
+                return handleError(err);
+            }
+
+            console.log(page);
+        });
     });
 });
+
+function page(title, callback) {
+    var query_params = {
+        'prop': 'info|pageprops|extracts',
+        'explaintext': '',
+        'inprop': 'url',
+        'redirects': '',
+        'titles': title
+    };
+
+    _wiki_request(query_params, function (error, response, body) {
+        if (error) {
+            return callback(error);
+        }
+
+        if (response.statusCode != 200) {
+            return callback(new Error('Bad Request'));
+        }
+
+        var request = JSON.parse(body);
+        var query = request['query'];
+        var pageid = Object.keys(query['pages'])[0];
+        var page = query['pages'][pageid];
+
+        if (page.hasOwnProperty('missing')) {
+            return callback(new Error('Missing page'));
+        }
+
+        if (query.hasOwnProperty('redirects')) {
+            var redirects = query['redirects'][0];
+            var from_title = title;
+
+            if (query.hasOwnProperty('normalized')) {
+                var normalized = query['normalized'][0];
+                assert(normalized['from'] == title);
+                from_title = normalized['to'];
+            }
+
+            assert(redirects['from'] == from_title);
+            return page(redirects['to'], callback);
+        }
+
+        return callback(undefined, page);
+    });
+}
 
 function assert(condition, message) {
     if (!condition) {
