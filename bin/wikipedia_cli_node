@@ -4,6 +4,7 @@ var program = require('commander');
 var inquirer = require('inquirer');
 var request = require('request');
 var async = require('async');
+var fs = require('fs');
 var Progress = require('../lib/progress');
 
 API_URL = 'http://en.wikipedia.org/w/api.php';
@@ -78,6 +79,11 @@ inquirer.prompt([{
         },
         function (title, callback) {
             page(title, callback);
+        },
+        function (page, callback) {
+            fs.appendFile(program.logFilename, page['fullurl'], function (err) {
+                callback(err, page)
+            });
         }
     ], function (err, result) {
        if (err) {
