@@ -35,8 +35,8 @@ function search(query, callback) {
 
         var raw_results = JSON.parse(body);
         if (raw_results['error']) {
-            if (timeoutErrorMessages.contains(raw_results['error']['info'])) {
-                return callback(error)
+            if (timeoutErrorMessages.indexOf(raw_results['error']['info']) !== -1) {
+                return callback(new Error('Network Timeout'));
             } else {
                 return callback(new Error(raw_results['error']['info']))
             }
