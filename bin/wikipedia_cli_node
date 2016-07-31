@@ -84,13 +84,14 @@ inquirer.prompt([{
             fs.appendFile(program.logFilename, page['fullurl'], function (err) {
                 callback(err, page)
             });
+        },
+        function (page, callback) {
+            fs.writeFile('content.txt', page['extract'], callback);
         }
-    ], function (err, result) {
-       if (err) {
-           return handleError(err);
-       }
-
-       console.log(result);
+    ], function (err) {
+        if (err) {
+            return handleError(err);
+        }
     });
 });
 
